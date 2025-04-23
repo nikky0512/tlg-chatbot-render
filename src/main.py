@@ -8,7 +8,9 @@ import uvicorn
 from fastapi import FastAPI, Request, Response, status
 from fastapi.responses import HTMLResponse, StreamingResponse
 
-from __version__ import __version__
+# Bot version
+BOT_VERSION = "0.1"
+
 from src.bot import bot
 from src.utils import (
     BOT_NAME,
@@ -24,11 +26,6 @@ create_initial_folders()
 console_out = initialize_logging()
 time_str = get_date_time("Asia/Ho_Chi_Minh")
 
-# Bot version
-try:
-    BOT_VERSION = __version__
-except:
-    BOT_VERSION = "with unknown version"
 
 
 @asynccontextmanager
