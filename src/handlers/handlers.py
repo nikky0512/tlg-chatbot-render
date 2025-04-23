@@ -1,3 +1,4 @@
+
 import asyncio
 import glob
 import logging
@@ -8,9 +9,9 @@ from telethon.tl.custom import Button
 from telethon.tl.functions.messages import SetTypingRequest
 from telethon.tl.types import SendMessageTypingAction
 
-import utils.utils
-from functions.additional_func import bash, search
-from functions.chat_func import (
+import src.utils
+from src.functions.additional_func import bash, search
+from src.functions.chat_func import (
     get_bard_response,
     get_bing_response,
     get_gemini_response,
@@ -19,7 +20,7 @@ from functions.chat_func import (
     process_and_send_mess,
     start_and_check,
 )
-from utils import (
+from src.utils import (
     ALLOW_USERS,
     LOG_PATH,
     MODEL_DICT,
@@ -163,13 +164,13 @@ async def switch_model_handler(event: NewMessage) -> None:
                 event.chat_id,
                 f"Model not found, available models: **{available_models}**",
             )
-        elif MODEL_DICT[model][0] == utils.utils.model:
+        elif MODEL_DICT[model][0] == src.utils.model:
             await client.send_message(
                 event.chat_id, f"**{MODEL_DICT[model][0]}** is being used already"
             )
         else:
-            utils.utils.model = MODEL_DICT[model][0]
-            utils.utils.max_token = MODEL_DICT[model][1]
+            src.utils.model = MODEL_DICT[model][0]
+            src.utils.max_token = MODEL_DICT[model][1]
             await client.send_message(
                 event.chat_id,
                 f"Successfully set model to **{MODEL_DICT[model][0]}**",
@@ -187,7 +188,7 @@ async def senpai_chat_handler(event: NewMessage) -> None:
         message = message.split(" ", maxsplit=1)[1]
     logging.debug(f"Check chat type {chat_type} done")
     await client(SetTypingRequest(peer=chat_id, action=SendMessageTypingAction()))
-    utils.utils.sys_mess = SYS_MESS_SENPAI
+    src.utils.sys_mess = SYS_MESS_SENPAI
     filename, prompt = await start_and_check(event, message, chat_id)
     loop = asyncio.get_event_loop()
     future = loop.run_in_executor(None, get_openai_response, prompt, filename)
@@ -214,7 +215,7 @@ async def user_chat_handler(event: NewMessage) -> None:
     else:
         logging.debug(f"Check chat type {chat_type} done")
     await client(SetTypingRequest(peer=chat_id, action=SendMessageTypingAction()))
-    utils.utils.sys_mess = SYS_MESS_SENPAI
+    src.utils.sys_mess = SYS_MESS_SENPAI
     filename, prompt = await start_and_check(event, message, chat_id)
     loop = asyncio.get_event_loop()
     future = loop.run_in_executor(None, get_openai_response, prompt, filename)
@@ -241,7 +242,7 @@ async def group_chat_handler(event: NewMessage) -> None:
     else:
         logging.debug(f"Check chat type {chat_type} done")
     await client(SetTypingRequest(peer=chat_id, action=SendMessageTypingAction()))
-    utils.utils.sys_mess = SYS_MESS_FRIENDLY
+    src.utils.sys_mess = SYS_MESS_FRIENDLY
     filename, prompt = await start_and_check(event, message, chat_id)
     loop = asyncio.get_event_loop()
     future = loop.run_in_executor(None, get_openai_response, prompt, filename)
