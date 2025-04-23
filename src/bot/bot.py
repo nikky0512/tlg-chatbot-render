@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from telethon import TelegramClient
 from telethon.errors.rpcerrorlist import UnauthorizedError
 
-from src.handlers import (
+from handlers import (
     bard_chat_handler,
     bash_handler,
     bing_chat_handler,
@@ -23,7 +23,7 @@ from src.handlers import (
 )
 
 
-# Load  keys
+# Load keys
 def load_keys() -> Tuple[str, int, str]:
     load_dotenv()
     openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -42,10 +42,10 @@ async def bot() -> None:
             client = await TelegramClient(None, api_id, api_hash).start(
                 bot_token=bot_token
             )
-            logging.info("Successfully initiate bot")
+            logging.info("Successfully initiated bot")
         except UnauthorizedError:
             logging.error(
-                "Unauthorized access. Please check your Telethon API ID, API hash"
+                "Unauthorized access. Please check your Telethon API ID and hash."
             )
             raise UnauthorizedError
         except Exception as e:
